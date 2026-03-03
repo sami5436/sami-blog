@@ -3,7 +3,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 
 export const metadata: Metadata = {
-  title: "morning paper — daily reading log",
+  title: "sami's morning paper",
   description: "A personal journal for the articles I read each day.",
 };
 
