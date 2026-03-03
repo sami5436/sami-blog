@@ -33,23 +33,58 @@ body {
   font-family: var(--font-body);
 }
 
-/* Flame pulse animation */
-@keyframes flame-pulse {
-
-  0%,
-  100% {
-    transform: scale(1);
-    filter: brightness(1);
+/* Bucket drop animation — items cascade in from above */
+@keyframes bucket-item {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.97);
   }
 
-  50% {
-    transform: scale(1.1);
-    filter: brightness(1.15);
+  60% {
+    transform: translateY(3px) scale(1.005);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
-.flame-pulse {
-  animation: flame-pulse 2s ease-in-out infinite;
+.bucket-drop>div>section,
+.bucket-drop>div>article,
+.bucket-drop>div>section>a {
+  animation: bucket-item 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}
+
+.bucket-drop>div>section:nth-child(1),
+.bucket-drop>div>section:nth-child(1)>a {
+  animation-delay: 0s;
+}
+
+.bucket-drop>div>section:nth-child(2),
+.bucket-drop>div>section:nth-child(2)>a {
+  animation-delay: 0.06s;
+}
+
+.bucket-drop>div>section:nth-child(3),
+.bucket-drop>div>section:nth-child(3)>a {
+  animation-delay: 0.12s;
+}
+
+.bucket-drop>div>section:nth-child(4),
+.bucket-drop>div>section:nth-child(4)>a {
+  animation-delay: 0.18s;
+}
+
+.bucket-drop>div>section:nth-child(5),
+.bucket-drop>div>section:nth-child(5)>a {
+  animation-delay: 0.24s;
+}
+
+.bucket-drop>div>section:nth-child(6),
+.bucket-drop>div>section:nth-child(6)>a {
+  animation-delay: 0.30s;
 }
 
 /* Fade in animation */

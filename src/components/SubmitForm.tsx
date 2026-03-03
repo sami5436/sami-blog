@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { AVAILABLE_TAGS } from "@/lib/tags";
 
 export default function SubmitForm() {
     const router = useRouter();
@@ -9,10 +10,17 @@ export default function SubmitForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
     useEffect(() => {
         titleRef.current?.focus();
     }, []);
+
+    function toggleTag(tag: string) {
+        setSelectedTags((prev) =>
+            prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+        );
+    }
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -30,10 +38,7 @@ export default function SubmitForm() {
                     title: formData.get("title"),
                     url: formData.get("url") || null,
                     summary: formData.get("summary"),
-                    tags: String(formData.get("tags") || "")
-                        .split(",")
-                        .map((t) => t.trim())
-                        .filter(Boolean),
+                    tags: selectedTags,
                     password: formData.get("password"),
                 }),
             });
@@ -45,6 +50,7 @@ export default function SubmitForm() {
 
             setShowSuccess(true);
             form.reset();
+            setSelectedTags([]);
 
             setTimeout(() => {
                 router.push("/");
@@ -60,9 +66,8 @@ export default function SubmitForm() {
     if (showSuccess) {
         return (
             <div className="pop flex flex-col items-center justify-center py-20 text-center">
-                <span className="text-5xl mb-4">&#x2728;</span>
                 <h2 className="font-[family-name:var(--font-heading)] text-xl font-semibold text-foreground mb-2">
-                    logged
+                    logged.
                 </h2>
                 <p className="text-sm text-muted">
                     streak updated — redirecting to feed...
@@ -136,24 +141,26 @@ export default function SubmitForm() {
                 />
             </div>
 
-            {/* Tags */}
+            {/* Tags — selectable pills */}
             <div>
-                <label
-                    htmlFor="tags"
-                    className="font-[family-name:var(--font-heading)] text-xs text-muted uppercase tracking-wider mb-2 block"
-                >
-                    tags{" "}
-                    <span className="normal-case tracking-normal text-muted/60">
-                        (comma-separated)
-                    </span>
+                <label className="font-[family-name:var(--font-heading)] text-xs text-muted uppercase tracking-wider mb-3 block">
+                    tags
                 </label>
-                <input
-                    id="tags"
-                    name="tags"
-                    type="text"
-                    placeholder="psychology, science, tech"
-                    className="w-full bg-transparent border-b-2 border-border focus:border-accent outline-none py-2 text-foreground text-sm transition-colors duration-200 placeholder:text-muted/40"
-                />
+                <div className="flex flex-wrap gap-2">
+                    {AVAILABLE_TAGS.map((tag) => (
+                        <button
+                            key={tag}
+                            type="button"
+                            onClick={() => toggleTag(tag)}
+                            className={`tag px-3 py-1.5 rounded-full border transition-all duration-200 cursor-pointer ${selectedTags.includes(tag)
+                                    ? "bg-foreground text-background border-foreground"
+                                    : "bg-transparent text-muted border-border hover:border-foreground/30 hover:text-foreground"
+                                }`}
+                        >
+                            {tag}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* Password */}
