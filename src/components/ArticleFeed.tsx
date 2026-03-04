@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ArticleCard from "@/components/ArticleCard";
-import { Article } from "@/lib/store";
+import { Article } from "@/lib/db";
 import { AVAILABLE_TAGS } from "@/lib/tags";
 
 type ViewMode = "date" | "tag";
@@ -20,7 +20,7 @@ export default function ArticleFeed({ articles }: { articles: Article[] }) {
     // Group by date
     const groupedByDate = articles.reduce<Record<string, Article[]>>(
         (acc, article) => {
-            const date = new Date(article.createdAt).toLocaleDateString("en-US", {
+            const date = new Date(article.created_at).toLocaleDateString("en-US", {
                 weekday: "long",
                 month: "long",
                 day: "numeric",
@@ -67,8 +67,8 @@ export default function ArticleFeed({ articles }: { articles: Article[] }) {
                 <button
                     onClick={() => switchView("date")}
                     className={`text-xs px-3 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${view === "date"
-                            ? "bg-foreground text-background"
-                            : "text-muted hover:text-foreground"
+                        ? "bg-foreground text-background"
+                        : "text-muted hover:text-foreground"
                         }`}
                 >
                     by date
@@ -76,8 +76,8 @@ export default function ArticleFeed({ articles }: { articles: Article[] }) {
                 <button
                     onClick={() => switchView("tag")}
                     className={`text-xs px-3 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${view === "tag"
-                            ? "bg-foreground text-background"
-                            : "text-muted hover:text-foreground"
+                        ? "bg-foreground text-background"
+                        : "text-muted hover:text-foreground"
                         }`}
                 >
                     by tag
@@ -92,8 +92,8 @@ export default function ArticleFeed({ articles }: { articles: Article[] }) {
                             key={tag}
                             onClick={() => selectTag(tag)}
                             className={`tag px-2.5 py-1 rounded-full border transition-all duration-200 cursor-pointer ${activeTag === tag
-                                    ? "bg-accent text-background border-accent"
-                                    : "bg-transparent text-muted border-border hover:border-foreground/30 hover:text-foreground"
+                                ? "bg-accent text-background border-accent"
+                                : "bg-transparent text-muted border-border hover:border-foreground/30 hover:text-foreground"
                                 }`}
                         >
                             {tag}
@@ -106,7 +106,7 @@ export default function ArticleFeed({ articles }: { articles: Article[] }) {
             )}
 
             {/* Articles */}
-            <div key={animKey} className="bucket-drop">
+            <div key={animKey} className={view === "date" ? "bucket-drop" : "shuffle-deal"}>
                 {view === "date" && (
                     <div>
                         {Object.entries(groupedByDate).map(([date, dateArticles]) => (

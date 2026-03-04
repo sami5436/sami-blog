@@ -1,6 +1,8 @@
-import { getArticle } from "@/lib/store";
+import { getArticle } from "@/lib/db";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 export default async function ArticlePage({
     params,
@@ -8,13 +10,13 @@ export default async function ArticlePage({
     params: Promise<{ id: string }>;
 }) {
     const { id } = await params;
-    const article = getArticle(id);
+    const article = await getArticle(id);
 
     if (!article) {
         notFound();
     }
 
-    const date = new Date(article.createdAt).toLocaleDateString("en-US", {
+    const date = new Date(article.created_at).toLocaleDateString("en-US", {
         weekday: "long",
         month: "long",
         day: "numeric",

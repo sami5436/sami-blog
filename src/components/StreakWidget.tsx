@@ -1,4 +1,4 @@
-import { StreakData } from "@/lib/store";
+import { StreakData } from "@/lib/db";
 
 export default function StreakWidget({ streak }: { streak: StreakData }) {
     return (

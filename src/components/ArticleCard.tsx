@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Article } from "@/lib/store";
+import { Article } from "@/lib/db";
 
 function timeAgo(dateStr: string): string {
     const diff = Date.now() - new Date(dateStr).getTime();
@@ -39,7 +39,7 @@ export default function ArticleCard({ article }: { article: Article }) {
                         </div>
                     </div>
                     <span className="font-[family-name:var(--font-heading)] text-xs text-muted whitespace-nowrap mt-1">
-                        {timeAgo(article.createdAt)}
+                        {timeAgo(article.created_at)}
                     </span>
                 </div>
                 {article.url && (

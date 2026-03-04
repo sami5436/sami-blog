@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { addArticle } from "@/lib/store";
+import { addArticle } from "@/lib/db";
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "morning";
 
 export async function POST(req: NextRequest) {
     try {
@@ -21,12 +21,19 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const article = addArticle({
+        const article = await addArticle({
             title,
             url: url || null,
             summary,
             tags: tags || [],
         });
+
+        if (!article) {
+            return NextResponse.json(
+                { error: "Failed to save article" },
+                { status: 500 }
+            );
+        }
 
         return NextResponse.json({ article }, { status: 201 });
     } catch {
