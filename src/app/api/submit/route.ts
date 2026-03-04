@@ -1,10 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addArticle } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "morning";
 
 export async function POST(req: NextRequest) {
     try {
+        // Rate limit by IP
+        const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
+        const { allowed, remaining } = rateLimit(ip);
+
+        if (!allowed) {
+            return NextResponse.json(
+                { error: "Too many requests. Try again in a minute." },
+                { status: 429, headers: { "Retry-After": "60", "X-RateLimit-Remaining": "0" } }
+            );
+        }
+
         const body = await req.json();
         const { title, url, summary, tags, password } = body;
 

@@ -124,15 +124,8 @@ export default function ArticleFeed({ articles }: { articles: Article[] }) {
 
                 {view === "tag" && !activeTag && (
                     <div>
-                        {usedTags.map((tag) => (
-                            <section key={tag}>
-                                <h3 className="font-[family-name:var(--font-heading)] text-xs text-muted uppercase tracking-widest mb-1 mt-8 first:mt-0">
-                                    {tag}
-                                </h3>
-                                {groupedByTag[tag]?.map((article) => (
-                                    <ArticleCard key={article.id} article={article} />
-                                ))}
-                            </section>
+                        {articles.map((article) => (
+                            <ArticleCard key={article.id} article={article} />
                         ))}
                     </div>
                 )}
