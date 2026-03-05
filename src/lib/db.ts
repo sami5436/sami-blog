@@ -99,14 +99,27 @@ export async function getStreak(): Promise<StreakData> {
 
 async function updateStreak() {
     const streak = await getStreak();
-    const today = new Date().toISOString().split("T")[0];
+
+    // Use Central Time for consistent day boundaries
+    const formatter = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "America/Chicago",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    });
+
+    const today = formatter.format(new Date()); // YYYY-MM-DD in CST
 
     if (streak.lastEntryDate === today) {
         // Already logged today, no streak change
         return;
     }
 
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+    // Calculate yesterday in CST
+    const yesterdayDate = new Date();
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterday = formatter.format(yesterdayDate);
+
     let newCurrent: number;
 
     if (streak.lastEntryDate === yesterday) {
